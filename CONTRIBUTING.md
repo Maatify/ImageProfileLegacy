@@ -21,12 +21,9 @@ coding standards before opening a pull request.
 
 ## Local setup
 
-This package currently lives inside the `admin-control-panel` monorepo, not as a
-standalone repository:
-
 ```bash
-git clone https://github.com/Maatify/admin-control-panel.git
-cd admin-control-panel/Modules/ImageProfileLegacy
+git clone https://github.com/Maatify/ImageProfileLegacy.git
+cd ImageProfileLegacy
 composer install
 ```
 

@@ -1,7 +1,9 @@
-# maatify/image-profile-legacy — Extraction Checklist
+# maatify/image-profile-legacy — Release Readiness Checklist
 
-Use this checklist before publishing the package to Packagist or moving it into
-a standalone repository. Every item must be verified **green** before release.
+This package has been extracted into its own standalone repository
+(`Maatify/ImageProfileLegacy`) and no longer lives inside a host monorepo.
+Use this checklist before publishing a release to Packagist. Every item must
+be verified **green** before tagging.
 
 ---
 

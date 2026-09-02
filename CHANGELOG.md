@@ -11,6 +11,13 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Changed
 
+- **Extracted into its own standalone repository**, `Maatify/ImageProfileLegacy`.
+  This package no longer lives inside the `admin-control-panel` monorepo;
+  `composer.json`'s `homepage`/`support` URLs and `CONTRIBUTING.md`'s local
+  setup instructions now point at this repository directly. Consumers should
+  require it as a normal Composer dependency (`composer require
+  maatify/image-profile-legacy`) rather than referencing it inside another
+  project's `Modules/` directory.
 - **Package identity renamed** from `maatify/image-profile` to
   `maatify/image-profile-legacy`, resolving a Composer package-name collision
   with the newer `Modules/ImageProfile`. **Not backward compatible** for

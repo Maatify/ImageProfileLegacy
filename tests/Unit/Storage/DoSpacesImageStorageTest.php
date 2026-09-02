@@ -232,18 +232,27 @@ final class DoSpacesImageStorageTest extends TestCase
         self::assertSame('images/test.jpg', $result->remotePath);
     }
 
-    public function test_remote_path_is_url_encoded(): void
+    public function test_remote_path_is_not_url_encoded_for_s3_key(): void
     {
         $this->s3->expects(self::once())
             ->method('putObject')
             ->with(self::callback(function (array $args) {
-                return $args['Key'] === 'images/my%20test.jpg';
+                return $args['Key'] === 'images/my test.jpg';
             }))
             ->willReturn([]);
 
         $path = TestImageFactory::jpeg();
         $result = $this->makeStorage()->store($path, 'images/my test.jpg');
-        self::assertSame('images/my%20test.jpg', $result->remotePath);
+        self::assertSame('images/my test.jpg', $result->remotePath);
+        // The public URL should be URL-encoded, however.
+        self::assertStringContainsString('images/my%20test.jpg', $result->publicUrl);
+    }
+
+    public function test_store_rejects_dot_traversal_segments(): void
+    {
+        $this->expectException(\Maatify\ImageProfileLegacy\Exception\ImageProfileException::class);
+        $path = TestImageFactory::jpeg();
+        $this->makeStorage()->store($path, 'images/../test.jpg');
     }
 
     public function test_store_throws_on_empty_remote_path(): void

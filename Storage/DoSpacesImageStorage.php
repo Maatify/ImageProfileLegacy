@@ -164,7 +164,10 @@ final class DoSpacesImageStorage implements ImageStorageInterface
             : sprintf('https://%s.%s', $this->bucket, $this->resolveEndpointHost()),
             '/');
 
-        return $base . '/' . ltrim($remotePath, '/');
+        $segments = explode('/', ltrim($remotePath, '/'));
+        $encodedSegments = array_map('rawurlencode', $segments);
+
+        return $base . '/' . implode('/', $encodedSegments);
     }
 
     /**
@@ -187,11 +190,14 @@ final class DoSpacesImageStorage implements ImageStorageInterface
             throw new class("Remote path contains invalid characters (?, #): {$path}") extends ImageProfileException {};
         }
 
-        // Ensure path segments are URL encoded to handle spaces and other special characters
-        // consistently between object key and public URL
         $segments = explode('/', $normalized);
-        $encodedSegments = array_map('rawurlencode', $segments);
-        return implode('/', $encodedSegments);
+        foreach ($segments as $segment) {
+            if ($segment === '.' || $segment === '..') {
+                throw new class("Remote path cannot contain traversal segments (. or ..): {$path}") extends ImageProfileException {};
+            }
+        }
+
+        return $normalized;
     }
 
     private function resolveEndpointHost(): string

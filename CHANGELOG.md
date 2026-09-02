@@ -11,7 +11,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
-## [1.0.0] — (Intended for release)
+## [1.0.0] — 2026-09-02
 
 First stable release. This version's changes were accumulated while the
 package was being extracted from the `admin-control-panel` monorepo into

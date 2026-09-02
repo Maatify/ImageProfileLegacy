@@ -365,4 +365,7 @@ its own standalone repository, `Maatify/ImageProfileLegacy`.
 - `declare(strict_types=1)` on every file.
 
 [Unreleased]: https://github.com/Maatify/ImageProfileLegacy/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/Maatify/ImageProfileLegacy/releases/tag/v1.0.0
+[1.0.0]: https://github.com/Maatify/ImageProfileLegacy/commits/v1.0.0
+
+*Note: Versions 0.1.0 through 0.9.0 represent pre-release development history
+within the host monorepo. 1.0.0 above is intended to be the first tagged release in Maatify/ImageProfileLegacy.*

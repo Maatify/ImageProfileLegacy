@@ -54,6 +54,12 @@ its own standalone repository, `Maatify/ImageProfileLegacy`.
   "Requirements" section previously and incorrectly stated `ext-fileinfo`
   was required for `NativeImageMetadataReader`; that class only calls
   `getimagesize()`, part of PHP's core `standard` extension.
+- **Variant persistence** now supports the canonical nested options format while retaining legacy flat-format compatibility.
+- **Variant output names** reject traversal/separators/duplicates, and null `outputFormat` preserves JPEG, PNG, WebP, and GIF extension/format/MIME correctly.
+- Unsupported `OptimizationOptionsDTO` metadata/lossless semantics were removed.
+- `DoSpaces` uses one normalized raw S3 key for store/delete/DTO state, URL-encodes only the public URL, and rejects ambiguous traversal/query/fragment paths.
+- PDO table identifiers use the shared package-owned `PdoTableIdentifier`.
+- CI/support verification covers PHP 8.2–8.5.
 
 ### Fixed
 
@@ -68,13 +74,7 @@ its own standalone repository, `Maatify/ImageProfileLegacy`.
   never declared at all. Both are corrected: the full suite (308 tests)
   and PHPStan level 10 + strict rules (0 errors) now both pass from a
   standalone install of this package alone.
-- `NativePhpUploadAdapter::fromSuperGlobal()` previously passed
-  `$_FILES[$fieldName]` straight into `fromFilesEntry()` with no shape
-  validation; a malformed entry (wrong field types, missing keys, or not an
-  array) would fail with an unguarded PHP warning/error rather than a clean
-  exception. It now validates the entry's shape explicitly and throws the
-  new `InvalidImageInputException::malformedFilesEntry()` on mismatch — a
-  production-visible behavior change for this previously-unguarded path.
+- `NativePhpUploadAdapter` performs explicit runtime shape validation.
 - 33 real PHPStan level-10 + strict-rules findings in production code,
   never previously caught because `phpstan/phpstan-strict-rules` was never
   actually installed. All were defensive-code/type-precision corrections
@@ -85,6 +85,9 @@ its own standalone repository, `Maatify/ImageProfileLegacy`.
   `imagecreatetruecolor()`, throwing the same exception the existing
   `$canvas === false` check already threw for this case — no call path's
   outcome changes.
+- Fill resize center-crop math was corrected.
+- PNG compression is clamped for PHP 8.4+ compatibility.
+- `ImageValidationResultDTO::invalid()` enforces the non-empty-errors invariant through the package exception contract.
 
 ### Documentation
 

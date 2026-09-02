@@ -4,6 +4,9 @@ Thank you for your interest in contributing. This document explains how to set
 up your environment, run tests and static analysis, and follow the project's
 coding standards before opening a pull request.
 
+By participating in this project, you agree to abide by the
+[Code of Conduct](CODE_OF_CONDUCT.md).
+
 ---
 
 ## Requirements
@@ -21,12 +24,9 @@ coding standards before opening a pull request.
 
 ## Local setup
 
-This package currently lives inside the `admin-control-panel` monorepo, not as a
-standalone repository:
-
 ```bash
-git clone https://github.com/Maatify/admin-control-panel.git
-cd admin-control-panel/Modules/ImageProfileLegacy
+git clone https://github.com/Maatify/ImageProfileLegacy.git
+cd ImageProfileLegacy
 composer install
 ```
 
@@ -101,12 +101,13 @@ Zero errors are required before a PR can merge.
 
 | Branch | Purpose |
 |--------|---------|
-| `main` | Stable, released code only |
-| `develop` | Integration branch for upcoming release |
+| `main` | Stable, default branch |
 | `feature/*` | Individual feature work |
 | `fix/*` | Bug fixes |
+| `docs/*` | Documentation-only changes |
+| `chore/*` | Tooling, dependency, and maintenance changes |
 
-Open PRs against **`develop`**, not `main`.
+Open PRs against **`main`**.
 
 ---
 
@@ -134,6 +135,17 @@ docs(readme): document full upload flow with DO Spaces
 
 ---
 
+## Pull request guidelines
+
+- **Keep PRs focused**: solve one specific issue per pull request.
+- **Mention BC impact**: if your change breaks backward compatibility, state
+  this explicitly in the PR description (see `CHANGELOG.md`'s existing
+  **Not backward compatible** entries for the expected tone/detail).
+- **Don't change the public API casually**: architectural or public-API
+  changes need prior discussion and owner approval before implementation.
+
+---
+
 ## Pull request checklist
 
 Before marking a PR ready for review:
@@ -145,8 +157,9 @@ Before marking a PR ready for review:
 - [ ] No framework imports inside `src/`
 - [ ] `ValidationErrorCodeEnum` string values unchanged (or major version bumped)
 - [ ] New behaviour is covered by at least one test
+- [ ] `README.md` (or other relevant docs) updated if behavior changed
 - [ ] `CHANGELOG.md` updated under `[Unreleased]`
-- [ ] `EXTRACTION_CHECKLIST.md` reviewed if structural changes were made
+- [ ] `RELEASE_READINESS_CHECKLIST.md` reviewed if structural changes were made
 
 ---
 
@@ -158,6 +171,16 @@ Open a GitHub issue and include:
 - Composer version (`composer -V`)
 - A minimal reproducible example
 - The full error message or unexpected output
+
+---
+
+## Security
+
+If you discover a security vulnerability, please **do not report it in a public issue**.
+
+Security vulnerabilities must follow [SECURITY.md](SECURITY.md). Instead of
+public issues, please review the security policy and report it privately via
+email to [support@maatify.dev](mailto:support@maatify.dev).
 
 ---
 

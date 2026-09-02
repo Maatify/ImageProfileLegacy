@@ -1,6 +1,6 @@
 -- =============================================================================
 -- Schema: image_profiles
--- Package: maatify/image-profile  (v1 schema — updated Phase 9)
+-- Package: maatify/image-profile-legacy  (v1 schema — updated Phase 9)
 -- =============================================================================
 --
 -- Design principles:
@@ -76,7 +76,7 @@ CREATE TABLE `image_profiles`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci
-  COMMENT = 'Reusable image validation profiles — maatify/image-profile v1';
+  COMMENT = 'Reusable image validation profiles — maatify/image-profile-legacy v1';
 
 -- =============================================================================
 -- Migration: add Phase 9 columns to an existing v0.x table

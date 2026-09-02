@@ -273,13 +273,30 @@ final class NativeImageVariantGeneratorTest extends TestCase
         $this->generator->generate(TestImageFactory::jpeg(), $this->outputDir, $variants);
     }
 
-    public function test_target_path_uses_detected_extension_when_null(): void
+    public static function formatProvider(): array
     {
-        $source = TestImageFactory::jpeg();
+        return [
+            ['jpeg', 'jpg', 'image/jpeg'],
+            ['png', 'png', 'image/png'],
+            ['webp', 'webp', 'image/webp'],
+            ['gif', 'gif', 'image/gif'],
+        ];
+    }
+
+    /**
+     * @dataProvider formatProvider
+     */
+    public function test_target_path_and_format_preserved_when_output_format_null(string $factoryMethod, string $expectedExt, string $expectedMime): void
+    {
+        $source = TestImageFactory::$factoryMethod();
         $options = new ResizeOptionsDTO(100, 100, \Maatify\ImageProfileLegacy\Enum\ResizeModeEnum::Fit, 85, null);
         $variants = new VariantDefinitionCollectionDTO(new VariantDefinitionDTO('detect', $options));
 
         $result = $this->generator->generate($source, $this->outputDir, $variants);
-        self::assertStringEndsWith('detect.jpg', $result->getIterator()->current()->result->outputPath);
+
+        $processed = $result->getIterator()->current()->result;
+        self::assertStringEndsWith("detect.{$expectedExt}", $processed->outputPath);
+        self::assertSame($expectedExt, $processed->format);
+        self::assertSame($expectedMime, $processed->mimeType);
     }
 }

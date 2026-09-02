@@ -106,4 +106,56 @@ final class PdoImageProfileProviderVariantTest extends TestCase
         self::assertSame(100, $variant->options->width);
         self::assertSame(100, $variant->options->height);
     }
+
+    public function test_can_update_variants_round_trip(): void
+    {
+        $request = new CreateImageProfileRequest(
+            code: 'update_variants',
+            displayName: 'Test',
+            minWidth: null,
+            minHeight: null,
+            maxWidth: null,
+            maxHeight: null,
+            maxSizeBytes: null,
+            allowedExtensions: new AllowedExtensionCollection(),
+            allowedMimeTypes: new AllowedMimeTypeCollection(),
+            isActive: true,
+            notes: null,
+            minAspectRatio: null,
+            maxAspectRatio: null,
+            requiresTransparency: false,
+            processing: null
+        );
+
+        $this->repository->save($request);
+
+        $variants = new VariantDefinitionCollectionDTO(
+            VariantDefinitionDTO::thumbnail()
+        );
+
+        $updateRequest = new \Maatify\ImageProfileLegacy\Application\DTO\UpdateImageProfileRequest(
+            displayName: 'Updated',
+            minWidth: null,
+            minHeight: null,
+            maxWidth: null,
+            maxHeight: null,
+            maxSizeBytes: null,
+            allowedExtensions: new AllowedExtensionCollection(),
+            allowedMimeTypes: new AllowedMimeTypeCollection(),
+            notes: null,
+            minAspectRatio: null,
+            maxAspectRatio: null,
+            requiresTransparency: false,
+            processing: new ImageProfileProcessingExtensionDTO(null, null, $variants)
+        );
+
+        $this->repository->update('update_variants', $updateRequest);
+
+        $profile = $this->provider->findByCode('update_variants');
+        self::assertNotNull($profile);
+        self::assertNotNull($profile->processing);
+        self::assertNotNull($profile->processing->variants);
+        self::assertSame(1, $profile->processing->variants->count());
+        self::assertTrue($profile->processing->variants->hasName('thumbnail'));
+    }
 }

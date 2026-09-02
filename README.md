@@ -568,7 +568,7 @@ This package follows [Semantic Versioning](https://semver.org/).
 
 * PHP 8.2+
 * PHPStan Level 10 (max), strict rules, bleeding edge — 0 errors
-* PHPUnit — 333 tests, 611 assertions (Unit, Integration, Contract)
+* PHPUnit — 352 tests, 645 assertions (Unit, Integration, Contract)
 * GitHub Actions CI validated (PHP 8.2 / 8.3 / 8.4 / 8.5, prefer-lowest and prefer-stable)
 * `composer audit` — no known vulnerability advisories
 

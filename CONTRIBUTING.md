@@ -132,6 +132,17 @@ docs(readme): document full upload flow with DO Spaces
 
 ---
 
+## Pull request guidelines
+
+- **Keep PRs focused**: solve one specific issue per pull request.
+- **Mention BC impact**: if your change breaks backward compatibility, state
+  this explicitly in the PR description (see `CHANGELOG.md`'s existing
+  **Not backward compatible** entries for the expected tone/detail).
+- **Don't change the public API casually**: architectural or public-API
+  changes need prior discussion and owner approval before implementation.
+
+---
+
 ## Pull request checklist
 
 Before marking a PR ready for review:
@@ -143,6 +154,7 @@ Before marking a PR ready for review:
 - [ ] No framework imports inside `src/`
 - [ ] `ValidationErrorCodeEnum` string values unchanged (or major version bumped)
 - [ ] New behaviour is covered by at least one test
+- [ ] `README.md` (or other relevant docs) updated if behavior changed
 - [ ] `CHANGELOG.md` updated under `[Unreleased]`
 - [ ] `EXTRACTION_CHECKLIST.md` reviewed if structural changes were made
 

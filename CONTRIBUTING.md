@@ -98,12 +98,13 @@ Zero errors are required before a PR can merge.
 
 | Branch | Purpose |
 |--------|---------|
-| `main` | Stable, released code only |
-| `develop` | Integration branch for upcoming release |
+| `main` | Stable, default branch |
 | `feature/*` | Individual feature work |
 | `fix/*` | Bug fixes |
+| `docs/*` | Documentation-only changes |
+| `chore/*` | Tooling, dependency, and maintenance changes |
 
-Open PRs against **`develop`**, not `main`.
+Open PRs against **`main`**.
 
 ---
 

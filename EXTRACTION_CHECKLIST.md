@@ -64,7 +64,12 @@ be verified **green** before tagging.
 
 ## 5. Immutability
 
-- [ ] All `src/Entity/` and `src/DTO/` classes are `final readonly`
+- [x] All `src/Entity/` classes and scalar `src/DTO/` classes (i.e. excluding
+      `*CollectionDTO` iterables) are `final readonly`
+- [x] `*CollectionDTO` classes are `final` (not `readonly` — they wrap an
+      internal iterable) and achieve immutability by convention: state is
+      set once in the constructor, there are no mutating methods, and
+      `with()` always returns a new instance
 - [x] All `src/ValueObject/` classes are `final` with no public setters
 - [x] Collection `with()` methods return **new** instances — they do not mutate
       the receiver
@@ -81,7 +86,6 @@ be verified **green** before tagging.
       `extension_not_allowed`, `width_too_small`, `height_too_small`,
       `width_too_large`, `height_too_large`, `file_too_large`,
       `aspect_ratio_too_narrow`, `aspect_ratio_too_wide`, `transparency_required`
-- [ ] `ValidationErrorCodeEnum::from()` round-trips all 12 values correctly
 - [x] `ValidationErrorCodeEnum::from()` round-trips all 15 values correctly
 
 ---
@@ -196,7 +200,9 @@ be verified **green** before tagging.
 - [x] `CHANGELOG.md` documents all released versions following Keep a Changelog
 - [x] Each version entry lists Added, Changed, Fixed, Removed, Architecture as
       applicable
-- [x] `[Unreleased]` section exists and is kept empty between releases
+- [x] `[Unreleased]` section exists and accumulates changes as they land;
+      it is emptied only at the moment its contents move into a new
+      version entry
 - [x] Version links at the bottom of `CHANGELOG.md` point to the correct GitHub
       diff URLs
 

@@ -263,7 +263,7 @@ The validator short-circuits only on infrastructure failures (missing profile, m
 
 ## Public Entry Point
 
-For most consumers, use `ImageProfileValidationService` as the neutral module boundary.
+For most consumers, use `ImageProfileValidationService` as the neutral library boundary.
 
 ```php
 use Maatify\ImageProfileLegacy\Service\ImageProfileValidationService;
@@ -302,7 +302,7 @@ $service = ImageProfileComposition::fromPdo($pdo, 'image_profiles');
 
 ## Canonical Contract Surface
 
-Consumers should use the module through library-defined contracts/DTOs/services only.
+Consumers should use the library through its defined contracts/DTOs/services only.
 
 ### Validation-first read/use path
 

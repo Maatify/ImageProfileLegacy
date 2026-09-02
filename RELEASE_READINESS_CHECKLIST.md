@@ -112,6 +112,17 @@ be verified **green** before tagging.
 
 ---
 
+## 8.1 Release Blocker Invariants
+
+- [x] Variant persistence serialization/deserialization is fully round-trippable.
+- [x] Variant names are safely validated (no path traversal, no invalid chars).
+- [x] Generated variant outputs remain within the target directory.
+- [x] Format-extension correctness holds true (even when null).
+- [x] Storage failures (e.g. unreadable files) fail predictably per the error contract.
+- [x] The CI matrix correctly tests across all supported PHP versions.
+
+---
+
 ## 9. Validator Behaviour Invariants
 
 - [x] `validateByCode()` NEVER throws — it always returns `ImageValidationResultDTO`

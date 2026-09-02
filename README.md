@@ -366,7 +366,7 @@ These codes are defined in `ValidationErrorCodeEnum` and will not change between
 
 ## Adapters
 
-Adapters convert framework-specific upload objects into `ImageFileInputDTO`. They live outside `src/` because the core must remain framework-agnostic.
+Adapters convert framework-specific upload objects into `ImageFileInputDTO`. They live outside `src/` because the core validator must remain framework-agnostic. The package provides these optional adapters to help with typical workflows, but they are separate from the canonical validation path.
 
 ### Slim / PSR-7 adapter
 
@@ -399,7 +399,7 @@ Both adapters throw `InvalidImageInputException` for any `UPLOAD_ERR_*` code oth
 
 ## Storage
 
-Storage implementations live outside `src/`. The core validator has no storage dependency.
+Storage implementations live outside `src/`. The core validator has no storage dependency. The package provides optional storage implementations to ease integration, but they operate independently of the validation core.
 
 ### DigitalOcean Spaces
 
@@ -533,7 +533,7 @@ All collection DTOs implement `IteratorAggregate` and `JsonSerializable`.
 - Validation and processing are **always separate** — no merging of concerns.
 - Stable business identifiers use `code`, not fragile display labels.
 - No raw arrays on the public API — all collections are typed DTOs.
-- Adapters and storage live **outside** `src/` — the core has zero framework or cloud SDK dependencies.
+- Adapters and storage live **outside** `src/` — the core validation logic has zero framework or cloud SDK dependencies.
 
 ---
 

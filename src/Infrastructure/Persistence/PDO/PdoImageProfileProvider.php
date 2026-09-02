@@ -57,6 +57,9 @@ final class PdoImageProfileProvider implements ImageProfileProviderInterface
         private readonly PDO $pdo,
         private readonly string $table = 'image_profiles',
     ) {
+        if (preg_match('/^[a-zA-Z0-9_]+$/', $this->table) !== 1) {
+            throw new class("Invalid table identifier: {$this->table}") extends ImageProfileException {};
+        }
     }
 
     /**

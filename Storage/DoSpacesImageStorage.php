@@ -82,8 +82,19 @@ final class DoSpacesImageStorage implements ImageStorageInterface
         string $remotePath,
         string $acl = 'public-read',
     ): StoredImageDTO {
+        if (!is_file($localPath) || !is_readable($localPath)) {
+            throw new class("Cannot store file; local path is not a readable file: {$localPath}") extends ImageProfileException {};
+        }
+
+        $remotePath = trim($remotePath, '/');
+
         $mimeType  = $this->detectMime($localPath);
-        $sizeBytes = (int) filesize($localPath);
+
+        $sizeBytes = @filesize($localPath);
+        if ($sizeBytes === false) {
+            throw new class("Cannot store file; failed to stat local file size: {$localPath}") extends ImageProfileException {};
+        }
+        $sizeBytes = $sizeBytes;
 
         try {
             $this->client->putObject([
@@ -122,6 +133,7 @@ final class DoSpacesImageStorage implements ImageStorageInterface
      */
     public function delete(string $remotePath): void
     {
+        $remotePath = trim($remotePath, '/');
         try {
             $this->client->deleteObject([
                 'Bucket' => $this->bucket,
@@ -165,8 +177,12 @@ final class DoSpacesImageStorage implements ImageStorageInterface
     private function detectMime(string $localPath): string
     {
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
-        $mime  = $finfo->file($localPath);
+        $mime  = @$finfo->file($localPath);
 
-        return is_string($mime) ? $mime : 'application/octet-stream';
+        if ($mime === false) {
+            throw new class("Cannot detect MIME type; finfo failed on local path: {$localPath}") extends ImageProfileException {};
+        }
+
+        return $mime;
     }
 }

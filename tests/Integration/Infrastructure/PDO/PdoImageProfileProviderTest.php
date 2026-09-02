@@ -284,4 +284,16 @@ final class PdoImageProfileProviderTest extends TestCase
 
         self::assertTrue($collection->isEmpty());
     }
+
+    public function test_rejects_invalid_table_identifier(): void
+    {
+        $this->expectException(\Maatify\ImageProfileLegacy\Exception\ImageProfileException::class);
+        new PdoImageProfileProvider($this->pdo, 'invalid`table');
+    }
+
+    public function test_accepts_valid_table_identifier(): void
+    {
+        $provider = new PdoImageProfileProvider($this->pdo, 'custom_table_123');
+        self::assertInstanceOf(PdoImageProfileProvider::class, $provider);
+    }
 }

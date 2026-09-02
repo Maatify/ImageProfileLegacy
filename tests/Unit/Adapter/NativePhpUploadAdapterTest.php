@@ -131,6 +131,17 @@ final class NativePhpUploadAdapterTest extends TestCase
     }
 
     // -------------------------------------------------------------------------
+    // fromFilesEntry() — malformed input
+    // -------------------------------------------------------------------------
+
+    #[DataProvider('malformedEntryProvider')]
+    public function test_throws_on_malformed_input_directly(mixed $entry): void
+    {
+        $this->expectException(InvalidImageInputException::class);
+        NativePhpUploadAdapter::fromFilesEntry($entry);
+    }
+
+    // -------------------------------------------------------------------------
     // fromFilesEntry() — field mapping edge cases
     // -------------------------------------------------------------------------
 

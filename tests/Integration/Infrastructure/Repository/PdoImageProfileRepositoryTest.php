@@ -287,4 +287,16 @@ final class PdoImageProfileRepositoryTest extends TestCase
 
         $this->repository->toggleActive('ghost_profile', true);
     }
+
+    public function test_rejects_invalid_table_identifier(): void
+    {
+        $this->expectException(\Maatify\ImageProfileLegacy\Exception\ImageProfileException::class);
+        new PdoImageProfileRepository($this->pdo, 'invalid`table');
+    }
+
+    public function test_accepts_valid_table_identifier(): void
+    {
+        $repository = new PdoImageProfileRepository($this->pdo, 'custom_table_123');
+        self::assertInstanceOf(PdoImageProfileRepository::class, $repository);
+    }
 }

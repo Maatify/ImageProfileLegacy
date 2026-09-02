@@ -22,6 +22,10 @@
     <source>
         <include>
             <directory>src</directory>
+            <directory>Application</directory>
+            <directory>Infrastructure</directory>
+            <directory>Adapter</directory>
+            <directory>Storage</directory>
         </include>
     </source>
 

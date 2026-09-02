@@ -27,7 +27,7 @@ use JsonSerializable;
  */
 final readonly class ImageValidationResultDTO implements JsonSerializable
 {
-    public function __construct(
+    private function __construct(
         public bool                              $isValid,
         public string                            $profileCode,
         public ?ImageMetadataDTO                 $metadata,

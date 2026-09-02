@@ -53,9 +53,17 @@ final class NativeImageVariantGenerator implements ImageVariantGeneratorInterfac
         $this->assertDirectoryWritable($targetDirectory);
 
         $collection = GeneratedVariantCollectionDTO::empty();
+        $usedNames = [];
 
         foreach ($variants as $definition) {
-            $targetPath = $this->buildTargetPath($targetDirectory, $definition);
+            $this->assertVariantNameSafe($definition->name);
+
+            if (isset($usedNames[$definition->name])) {
+                throw new class("Duplicate variant name detected: {$definition->name}") extends ImageProfileException {};
+            }
+            $usedNames[$definition->name] = true;
+
+            $targetPath = $this->buildTargetPath($sourcePath, $targetDirectory, $definition);
             $result     = $this->processor->resize($sourcePath, $targetPath, $definition->options);
             $collection = $collection->with(new GeneratedVariantDTO($definition->name, $result));
         }
@@ -78,11 +86,36 @@ final class NativeImageVariantGenerator implements ImageVariantGeneratorInterfac
         }
     }
 
-    private function buildTargetPath(string $directory, VariantDefinitionDTO $definition): string
+    private function assertVariantNameSafe(string $name): void
+    {
+        if (trim($name) === '') {
+            throw new class("Variant name cannot be empty") extends ImageProfileException {};
+        }
+
+        if (preg_match('#[\\\\/\0]#', $name) === 1 || $name === '.' || $name === '..') {
+            throw new class("Variant name contains invalid characters or path traversal components: {$name}") extends ImageProfileException {};
+        }
+    }
+
+    private function detectFormat(string $path): ImageFormatEnum
+    {
+        $info = @getimagesize($path);
+        if ($info === false) {
+            throw new class("Failed to read metadata for: {$path}") extends ImageProfileException {};
+        }
+        $mime = $info['mime'];
+        $format = ImageFormatEnum::fromString($mime);
+        if ($format === null) {
+            throw new class("Unrecognised image format for: {$path}") extends ImageProfileException {};
+        }
+        return $format;
+    }
+
+    private function buildTargetPath(string $sourcePath, string $directory, VariantDefinitionDTO $definition): string
     {
         $ext = $definition->options->outputFormat instanceof ImageFormatEnum
             ? $definition->options->outputFormat->value
-            : 'jpg'; // fallback; NativeImageProcessor::detectFormat() handles the actual format
+            : $this->detectFormat($sourcePath)->value;
 
         return rtrim($directory, '/\\') . DIRECTORY_SEPARATOR . $definition->name . '.' . $ext;
     }

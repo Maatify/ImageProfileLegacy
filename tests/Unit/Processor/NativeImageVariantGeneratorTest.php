@@ -248,4 +248,38 @@ final class NativeImageVariantGeneratorTest extends TestCase
         self::assertArrayHasKey('name', $first);
         self::assertArrayHasKey('result', $first);
     }
+
+    public function test_rejects_empty_name(): void
+    {
+        $this->expectException(ImageProfileException::class);
+        $variants = new VariantDefinitionCollectionDTO(new VariantDefinitionDTO('', ResizeOptionsDTO::fit(1, 1)));
+        $this->generator->generate(TestImageFactory::jpeg(), $this->outputDir, $variants);
+    }
+
+    public function test_rejects_path_traversal(): void
+    {
+        $this->expectException(ImageProfileException::class);
+        $variants = new VariantDefinitionCollectionDTO(new VariantDefinitionDTO('../outside', ResizeOptionsDTO::fit(1, 1)));
+        $this->generator->generate(TestImageFactory::jpeg(), $this->outputDir, $variants);
+    }
+
+    public function test_rejects_duplicates(): void
+    {
+        $this->expectException(ImageProfileException::class);
+        $variants = new VariantDefinitionCollectionDTO(
+            new VariantDefinitionDTO('dup', ResizeOptionsDTO::fit(1, 1)),
+            new VariantDefinitionDTO('dup', ResizeOptionsDTO::fit(2, 2))
+        );
+        $this->generator->generate(TestImageFactory::jpeg(), $this->outputDir, $variants);
+    }
+
+    public function test_target_path_uses_detected_extension_when_null(): void
+    {
+        $source = TestImageFactory::jpeg();
+        $options = new ResizeOptionsDTO(100, 100, \Maatify\ImageProfileLegacy\Enum\ResizeModeEnum::Fit, 85, null);
+        $variants = new VariantDefinitionCollectionDTO(new VariantDefinitionDTO('detect', $options));
+
+        $result = $this->generator->generate($source, $this->outputDir, $variants);
+        self::assertStringEndsWith('detect.jpg', $result->getIterator()->current()->result->outputPath);
+    }
 }

@@ -104,12 +104,12 @@ CREATE TABLE `image_profiles`
 --     ('category_app_image', 'Category App Image', 200, 200, 2000, 2000, 2097152,
 --      'jpg,jpeg,png,webp', 'image/jpeg,image/png,image/webp', 1,
 --      NULL, NULL, 0, 'webp', 85,
---      '[{"name":"thumbnail","width":150,"height":150,"mode":"fill","quality":80,"outputFormat":"webp"}]'),
+--      '[{"name":"thumbnail","options":{"width":150,"height":150,"mode":"fill","quality":80,"outputFormat":"webp"}}]'),
 --
 --     ('product_thumbnail', 'Product Thumbnail', 100, 100, 1000, 1000, 1048576,
 --      'jpg,jpeg,png,webp', 'image/jpeg,image/png,image/webp', 1,
 --      NULL, NULL, 0, 'webp', 85,
---      '[{"name":"thumb","width":150,"height":150,"mode":"fill","quality":80,"outputFormat":"webp"},{"name":"medium","width":600,"height":600,"mode":"fit","quality":85,"outputFormat":null}]'),
+--      '[{"name":"thumb","options":{"width":150,"height":150,"mode":"fill","quality":80,"outputFormat":"webp"}},{"name":"medium","options":{"width":600,"height":600,"mode":"fit","quality":85,"outputFormat":null}}]'),
 --
 --     ('homepage_banner', 'Homepage Banner', 1200, 400, 3840, 2160, 5242880,
 --      'jpg,jpeg,png', 'image/jpeg,image/png', 1,

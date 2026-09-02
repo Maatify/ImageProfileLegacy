@@ -171,6 +171,16 @@ Open a GitHub issue and include:
 
 ---
 
+## Security
+
+If you discover a security vulnerability, please **do not report it in a public issue**.
+
+Security vulnerabilities must follow [SECURITY.md](SECURITY.md). Instead of
+public issues, please review the security policy and report it privately via
+email to [support@maatify.dev](mailto:support@maatify.dev).
+
+---
+
 ## License
 
 By contributing you agree that your changes will be released under the

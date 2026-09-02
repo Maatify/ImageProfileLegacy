@@ -16,6 +16,7 @@
 
 [![Changelog](https://img.shields.io/badge/Changelog-View-blue.svg)](CHANGELOG.md)
 [![Release Checklist](https://img.shields.io/badge/Release-Checklist-blue.svg)](EXTRACTION_CHECKLIST.md)
+[![Security Policy](https://img.shields.io/badge/Security-Policy-blue.svg)](SECURITY.md)
 [![Contributing Guide](https://img.shields.io/badge/Contributing-Guide-blue.svg)](CONTRIBUTING.md)
 
 `maatify/image-profile-legacy` is a framework-agnostic standalone Composer package for defining and validating named image-upload profiles within the Maatify ecosystem.

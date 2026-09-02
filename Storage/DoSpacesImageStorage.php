@@ -82,8 +82,19 @@ final class DoSpacesImageStorage implements ImageStorageInterface
         string $remotePath,
         string $acl = 'public-read',
     ): StoredImageDTO {
+        if (!is_file($localPath) || !is_readable($localPath)) {
+            throw new class("Cannot store file; local path is not a readable file: {$localPath}") extends ImageProfileException {};
+        }
+
+        $remotePath = self::normalizeRemotePath($remotePath);
+
         $mimeType  = $this->detectMime($localPath);
-        $sizeBytes = (int) filesize($localPath);
+
+        $sizeBytes = @filesize($localPath);
+        if ($sizeBytes === false) {
+            throw new class("Cannot store file; failed to stat local file size: {$localPath}") extends ImageProfileException {};
+        }
+        $sizeBytes = $sizeBytes;
 
         try {
             $this->client->putObject([
@@ -122,6 +133,7 @@ final class DoSpacesImageStorage implements ImageStorageInterface
      */
     public function delete(string $remotePath): void
     {
+        $remotePath = self::normalizeRemotePath($remotePath);
         try {
             $this->client->deleteObject([
                 'Bucket' => $this->bucket,
@@ -152,7 +164,40 @@ final class DoSpacesImageStorage implements ImageStorageInterface
             : sprintf('https://%s.%s', $this->bucket, $this->resolveEndpointHost()),
             '/');
 
-        return $base . '/' . ltrim($remotePath, '/');
+        $segments = explode('/', ltrim($remotePath, '/'));
+        $encodedSegments = array_map('rawurlencode', $segments);
+
+        return $base . '/' . implode('/', $encodedSegments);
+    }
+
+    /**
+     * Normalizes a remote path according to S3-compatible key rules.
+     * Prevents ambiguity from leading/trailing slashes, duplicate separators,
+     * empty paths, and query/fragment characters.
+     *
+     * @throws ImageProfileException if the normalized path is invalid.
+     */
+    private static function normalizeRemotePath(string $path): string
+    {
+        $normalized = trim($path, '/');
+        $normalized = preg_replace('#/+#', '/', $normalized) ?? $normalized;
+
+        if ($normalized === '') {
+            throw new class('Remote path cannot be empty') extends ImageProfileException {};
+        }
+
+        if (preg_match('/[\?#]/', $normalized) === 1) {
+            throw new class("Remote path contains invalid characters (?, #): {$path}") extends ImageProfileException {};
+        }
+
+        $segments = explode('/', $normalized);
+        foreach ($segments as $segment) {
+            if ($segment === '.' || $segment === '..') {
+                throw new class("Remote path cannot contain traversal segments (. or ..): {$path}") extends ImageProfileException {};
+            }
+        }
+
+        return $normalized;
     }
 
     private function resolveEndpointHost(): string
@@ -165,8 +210,12 @@ final class DoSpacesImageStorage implements ImageStorageInterface
     private function detectMime(string $localPath): string
     {
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
-        $mime  = $finfo->file($localPath);
+        $mime  = @$finfo->file($localPath);
 
-        return is_string($mime) ? $mime : 'application/octet-stream';
+        if ($mime === false) {
+            throw new class("Cannot detect MIME type; finfo failed on local path: {$localPath}") extends ImageProfileException {};
+        }
+
+        return $mime;
     }
 }

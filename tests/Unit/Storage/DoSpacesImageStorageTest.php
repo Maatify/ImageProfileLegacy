@@ -195,4 +195,89 @@ final class DoSpacesImageStorageTest extends TestCase
 
         $this->makeStorage()->delete('images/ghost.jpg');
     }
+
+    public function test_store_throws_when_local_file_missing(): void
+    {
+        $this->expectException(ImageProfileException::class);
+        $this->makeStorage()->store('/tmp/does_not_exist.jpg', 'images/test.jpg');
+    }
+
+    public function test_store_throws_when_finfo_fails(): void
+    {
+        // For example if a file exists but is a directory or unreadable during finfo (simulate missing after is_file check)
+        $this->expectException(ImageProfileException::class);
+        $path = sys_get_temp_dir() . '/finfo_fail_test';
+        touch($path);
+        chmod($path, 0000); // Unreadable
+
+        try {
+            $this->makeStorage()->store($path, 'images/test.jpg');
+        } finally {
+            @chmod($path, 0644);
+            @unlink($path);
+        }
+    }
+
+    public function test_remote_path_is_normalized(): void
+    {
+        $this->s3->expects(self::once())
+            ->method('putObject')
+            ->with(self::callback(function (array $args) {
+                return $args['Key'] === 'images/test.jpg';
+            }))
+            ->willReturn([]);
+
+        $path = TestImageFactory::jpeg();
+        $result = $this->makeStorage()->store($path, '///images//test.jpg/');
+        self::assertSame('images/test.jpg', $result->remotePath);
+    }
+
+    public function test_remote_path_is_not_url_encoded_for_s3_key(): void
+    {
+        $this->s3->expects(self::once())
+            ->method('putObject')
+            ->with(self::callback(function (array $args) {
+                return $args['Key'] === 'images/my test.jpg';
+            }))
+            ->willReturn([]);
+
+        $path = TestImageFactory::jpeg();
+        $result = $this->makeStorage()->store($path, 'images/my test.jpg');
+        self::assertSame('images/my test.jpg', $result->remotePath);
+        // The public URL should be URL-encoded, however.
+        self::assertStringContainsString('images/my%20test.jpg', $result->publicUrl);
+    }
+
+    public function test_store_rejects_dot_traversal_segments(): void
+    {
+        $this->expectException(\Maatify\ImageProfileLegacy\Exception\ImageProfileException::class);
+        $path = TestImageFactory::jpeg();
+        $this->makeStorage()->store($path, 'images/../test.jpg');
+    }
+
+    public function test_store_throws_on_empty_remote_path(): void
+    {
+        $this->expectException(ImageProfileException::class);
+        $path = TestImageFactory::jpeg();
+        $this->makeStorage()->store($path, '///');
+    }
+
+    public function test_store_throws_on_remote_path_with_query_or_fragment(): void
+    {
+        $this->expectException(ImageProfileException::class);
+        $path = TestImageFactory::jpeg();
+        $this->makeStorage()->store($path, 'images/test.jpg?version=1');
+    }
+
+    public function test_delete_normalizes_remote_path(): void
+    {
+        $this->s3->expects(self::once())
+            ->method('deleteObject')
+            ->with(self::callback(function (array $args) {
+                return $args['Key'] === 'images/test.jpg';
+            }))
+            ->willReturn([]);
+
+        $this->makeStorage()->delete('///images//test.jpg/');
+    }
 }

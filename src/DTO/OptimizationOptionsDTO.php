@@ -24,12 +24,10 @@ final readonly class OptimizationOptionsDTO implements JsonSerializable
 {
     /**
      * @param int                 $quality      Output quality 1–100.
-     * @param bool                $stripMetadata Re-encode without EXIF/XMP/IPTC.
      * @param ImageFormatEnum|null $targetFormat  Null = keep source format.
      */
     public function __construct(
         public int $quality = 85,
-        public bool $stripMetadata = true,
         public ?ImageFormatEnum $targetFormat = null,
     ) {
         if ($this->quality < 1 || $this->quality > 100) {
@@ -43,17 +41,12 @@ final readonly class OptimizationOptionsDTO implements JsonSerializable
 
     public static function recompress(int $quality = 85): self
     {
-        return new self($quality, true);
+        return new self($quality);
     }
 
     public static function toWebp(int $quality = 80): self
     {
-        return new self($quality, true, ImageFormatEnum::Webp);
-    }
-
-    public static function lossless(int $quality = 90): self
-    {
-        return new self($quality, false);
+        return new self($quality, ImageFormatEnum::Webp);
     }
 
     // -------------------------------------------------------------------------
@@ -65,7 +58,6 @@ final readonly class OptimizationOptionsDTO implements JsonSerializable
     {
         return [
             'quality'       => $this->quality,
-            'stripMetadata' => $this->stripMetadata,
             'targetFormat'  => $this->targetFormat?->value,
         ];
     }

@@ -36,6 +36,7 @@ final class PdoImageProfileRepository implements ImageProfileRepositoryInterface
         private readonly PDO $pdo,
         private readonly string $table = 'image_profiles',
     ) {
+        \Maatify\ImageProfileLegacy\ValueObject\PdoTableIdentifier::assertValid($this->table);
     }
 
     public function save(CreateImageProfileRequest $request): ImageProfileEntity

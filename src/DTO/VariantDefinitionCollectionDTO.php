@@ -70,18 +70,22 @@ final class VariantDefinitionCollectionDTO implements IteratorAggregate, Countab
                 continue;
             }
 
-            $name   = isset($row['name'])   && is_string($row['name'])   ? $row['name']            : null;
-            $width  = isset($row['width'])  && is_numeric($row['width']) ? (int) $row['width']      : null;
-            $height = isset($row['height']) && is_numeric($row['height'])? (int) $row['height']     : null;
+            $name   = isset($row['name']) && is_string($row['name']) ? $row['name'] : null;
+
+            // Handle nested options structure (canonical) or fallback to flat structure (legacy)
+            $optionsSource = isset($row['options']) && is_array($row['options']) ? $row['options'] : $row;
+
+            $width  = isset($optionsSource['width'])  && is_numeric($optionsSource['width']) ? (int) $optionsSource['width']  : null;
+            $height = isset($optionsSource['height']) && is_numeric($optionsSource['height'])? (int) $optionsSource['height'] : null;
 
             if ($name === null || $name === '' || $width === null || $height === null) {
                 continue;
             }
 
-            $modeValue    = isset($row['mode']) && is_string($row['mode']) ? $row['mode'] : ResizeModeEnum::Fit->value;
+            $modeValue    = isset($optionsSource['mode']) && is_string($optionsSource['mode']) ? $optionsSource['mode'] : ResizeModeEnum::Fit->value;
             $mode         = ResizeModeEnum::tryFrom($modeValue) ?? ResizeModeEnum::Fit;
-            $quality      = isset($row['quality']) && is_numeric($row['quality']) ? (int) $row['quality'] : 85;
-            $formatValue  = isset($row['outputFormat']) && is_string($row['outputFormat']) ? $row['outputFormat'] : null;
+            $quality      = isset($optionsSource['quality']) && is_numeric($optionsSource['quality']) ? (int) $optionsSource['quality'] : 85;
+            $formatValue  = isset($optionsSource['outputFormat']) && is_string($optionsSource['outputFormat']) ? $optionsSource['outputFormat'] : null;
             $outputFormat = $formatValue !== null ? ImageFormatEnum::tryFrom($formatValue) : null;
 
             try {

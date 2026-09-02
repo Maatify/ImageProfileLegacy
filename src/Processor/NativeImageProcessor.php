@@ -132,17 +132,20 @@ final class NativeImageProcessor implements ImageProcessorInterface
         $scaledW  = (int) round($srcW * $ratio);
         $scaledH  = (int) round($srcH * $ratio);
 
-        // Offset for centre-crop
-        $offsetX  = (int) round(($scaledW - $targetW) / 2);
-        $offsetY  = (int) round(($scaledH - $targetH) / 2);
+        // Calculate positive source crop offsets, scaling back from the target dimensions to source dimensions
+        $srcCropX = (int) round(($srcW - ($targetW / $ratio)) / 2);
+        $srcCropY = (int) round(($srcH - ($targetH / $ratio)) / 2);
+
+        $srcCropW = (int) round($targetW / $ratio);
+        $srcCropH = (int) round($targetH / $ratio);
 
         $canvas = $this->createTrueColourCanvas($targetW, $targetH);
         imagecopyresampled(
             $canvas, $source,
             0, 0,
-            (int) round(-$offsetX / $ratio), (int) round(-$offsetY / $ratio),
+            max(0, $srcCropX), max(0, $srcCropY),
             $targetW, $targetH,
-            (int) round($targetW / $ratio), (int) round($targetH / $ratio),
+            $srcCropW, $srcCropH
         );
 
         return $canvas;
@@ -229,7 +232,7 @@ final class NativeImageProcessor implements ImageProcessorInterface
     {
         $result = match ($format) {
             ImageFormatEnum::Jpeg => imagejpeg($image, $path, $quality),
-            ImageFormatEnum::Png  => imagepng($image, $path, (int) round((100 - $quality) / 10)),
+            ImageFormatEnum::Png  => imagepng($image, $path, min(9, max(0, (int) round((100 - $quality) / 10)))),
             ImageFormatEnum::Webp => imagewebp($image, $path, $quality),
             ImageFormatEnum::Gif  => imagegif($image, $path),
         };

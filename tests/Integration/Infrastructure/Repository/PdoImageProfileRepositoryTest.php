@@ -287,4 +287,59 @@ final class PdoImageProfileRepositoryTest extends TestCase
 
         $this->repository->toggleActive('ghost_profile', true);
     }
+
+    public static function invalidTableProvider(): array
+    {
+        return [
+            ['invalid`table'],
+            ['table; DROP TABLE'],
+            ['schema.table'],
+            ['my table'],
+            ['table-name'],
+            [''],
+        ];
+    }
+
+    /**
+     * @dataProvider invalidTableProvider
+     */
+    public function test_rejects_invalid_table_identifier(string $invalid): void
+    {
+        $this->expectException(\Maatify\ImageProfileLegacy\Exception\ImageProfileException::class);
+        new PdoImageProfileRepository($this->pdo, $invalid);
+    }
+
+    public function test_accepts_valid_table_identifier(): void
+    {
+        $this->pdo->exec('
+            CREATE TABLE custom_table_123 (
+                id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+                code                TEXT    NOT NULL UNIQUE,
+                display_name        TEXT    DEFAULT NULL,
+                min_width           INTEGER DEFAULT NULL,
+                min_height          INTEGER DEFAULT NULL,
+                max_width           INTEGER DEFAULT NULL,
+                max_height          INTEGER DEFAULT NULL,
+                max_size_bytes      INTEGER DEFAULT NULL,
+                allowed_extensions  TEXT    DEFAULT NULL,
+                allowed_mime_types  TEXT    DEFAULT NULL,
+                is_active           INTEGER NOT NULL DEFAULT 1,
+                notes               TEXT    DEFAULT NULL,
+                min_aspect_ratio    REAL    DEFAULT NULL,
+                max_aspect_ratio    REAL    DEFAULT NULL,
+                requires_transparency INTEGER NOT NULL DEFAULT 0,
+                preferred_format    TEXT    DEFAULT NULL,
+                preferred_quality   INTEGER DEFAULT NULL,
+                variants            TEXT    DEFAULT NULL,
+                created_at          TEXT    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at          TEXT    NOT NULL DEFAULT CURRENT_TIMESTAMP
+            )
+        ');
+        $repository = new PdoImageProfileRepository($this->pdo, 'custom_table_123');
+        $req = $this->makeCreateRequest('test');
+        $repository->save($req);
+
+        $stmt = $this->pdo->query("SELECT COUNT(*) FROM custom_table_123 WHERE code = 'test'");
+        self::assertSame(1, (int) $stmt->fetchColumn());
+    }
 }

@@ -112,6 +112,17 @@ be verified **green** before tagging.
 
 ---
 
+## 8.1 Release Blocker Invariants
+
+- [x] Variant persistence serialization/deserialization is fully round-trippable.
+- [x] Variant names are safely validated (no path traversal, no invalid chars).
+- [x] Generated variant outputs remain within the target directory.
+- [x] Format-extension correctness holds true (even when null).
+- [x] Storage failures (e.g. unreadable files) fail predictably per the error contract.
+- [x] The CI matrix correctly tests across all supported PHP versions.
+
+---
+
 ## 9. Validator Behaviour Invariants
 
 - [x] `validateByCode()` NEVER throws — it always returns `ImageValidationResultDTO`
@@ -204,7 +215,7 @@ be verified **green** before tagging.
       it is emptied only at the moment its contents move into a new
       version entry
 - [x] Version links at the bottom of `CHANGELOG.md` point to the correct GitHub
-      diff URLs for every version actually tagged in this repository
+      diff URLs for every version to be tagged in this repository
       (`[Unreleased]`, `[1.0.0]`). The `0.1.0`–`0.9.0` entries predate this
       repository's existence, were never tagged here, and correctly carry no
       link — they are marked as pre-release development history instead

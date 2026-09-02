@@ -122,7 +122,7 @@ its own standalone repository, `Maatify/ImageProfileLegacy`.
 > **Pre-release development history.** The `0.1.0`–`0.9.0` entries below
 > document this package's development before it existed as its own
 > repository — they were never tagged as GitHub releases and have no
-> corresponding diff links. `1.0.0` above is the first version tagged
+> corresponding diff links. `1.0.0` above is intended to be the first tagged release
 > in `Maatify/ImageProfileLegacy`.
 
 ## 0.9.0 — 2026-04-17
@@ -350,4 +350,7 @@ its own standalone repository, `Maatify/ImageProfileLegacy`.
 - `declare(strict_types=1)` on every file.
 
 [Unreleased]: https://github.com/Maatify/ImageProfileLegacy/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/Maatify/ImageProfileLegacy/releases/tag/v1.0.0
+[1.0.0]: https://github.com/Maatify/ImageProfileLegacy/commits/v1.0.0
+
+*Note: Versions 0.1.0 through 0.9.0 represent pre-release development history
+within the host monorepo. 1.0.0 above is intended to be the first tagged release in Maatify/ImageProfileLegacy.*

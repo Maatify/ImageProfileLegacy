@@ -67,12 +67,12 @@ It provides reusable validation rules, a typed validation result, and pluggable 
 
 ### Out of Scope
 
-This package is deliberately **not** responsible for:
+The canonical validation core of this package is deliberately **not** responsible for:
 
-* storage engines or CDN delivery
-* image resizing, optimization, or thumbnail generation
-* framework HTTP lifecycle or direct `$_FILES` handling
+* framework HTTP lifecycle
 * admin UI or CRUD controllers
+
+*(Note: While the core focuses solely on validation, the package does ship optional extension primitives for image resizing/optimization, adapters for `$_FILES`/PSR-7, and a DoSpaces storage implementation to aid integration.)*
 
 ---
 
@@ -366,7 +366,7 @@ These codes are defined in `ValidationErrorCodeEnum` and will not change between
 
 ## Adapters
 
-Adapters convert framework-specific upload objects into `ImageFileInputDTO`. They live outside `src/` because the core must remain framework-agnostic.
+Adapters convert framework-specific upload objects into `ImageFileInputDTO`. They live outside `src/` because the core validator must remain framework-agnostic. The package provides these optional adapters to help with typical workflows, but they are separate from the canonical validation path.
 
 ### Slim / PSR-7 adapter
 
@@ -399,7 +399,7 @@ Both adapters throw `InvalidImageInputException` for any `UPLOAD_ERR_*` code oth
 
 ## Storage
 
-Storage implementations live outside `src/`. The core validator has no storage dependency.
+Storage implementations live outside `src/`. The core validator has no storage dependency. The package provides optional storage implementations to ease integration, but they operate independently of the validation core.
 
 ### DigitalOcean Spaces
 
@@ -533,7 +533,7 @@ All collection DTOs implement `IteratorAggregate` and `JsonSerializable`.
 - Validation and processing are **always separate** — no merging of concerns.
 - Stable business identifiers use `code`, not fragile display labels.
 - No raw arrays on the public API — all collections are typed DTOs.
-- Adapters and storage live **outside** `src/` — the core has zero framework or cloud SDK dependencies.
+- Adapters and storage live **outside** `src/` — the core validation logic has zero framework or cloud SDK dependencies.
 
 ---
 
@@ -568,8 +568,8 @@ This package follows [Semantic Versioning](https://semver.org/).
 
 * PHP 8.2+
 * PHPStan Level 10 (max), strict rules, bleeding edge — 0 errors
-* PHPUnit — 308 tests, 563 assertions (Unit, Integration, Contract)
-* GitHub Actions CI validated (PHP 8.2 / 8.3, prefer-lowest and prefer-stable)
+* PHPUnit — 353 tests, 647 assertions (Unit, Integration, Contract)
+* GitHub Actions CI validated (PHP 8.2 / 8.3 / 8.4 / 8.5, prefer-lowest and prefer-stable)
 * `composer audit` — no known vulnerability advisories
 
 ---

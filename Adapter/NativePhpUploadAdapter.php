@@ -57,30 +57,32 @@ final class NativePhpUploadAdapter
     /**
      * Build a DTO from a single `$_FILES` entry.
      *
-     * @param array{name: string, type: string, tmp_name: string, error: int, size: int} $filesEntry
+     * @param mixed $filesEntry  Expected to be an array from $_FILES, but accepts mixed to validate safely.
      *
      * @throws InvalidImageInputException on upload error or missing required fields.
      */
-    public static function fromFilesEntry(array $filesEntry): ImageFileInputDTO
+    public static function fromFilesEntry(mixed $filesEntry): ImageFileInputDTO
     {
-        $error = $filesEntry['error'];
+        $validEntry = self::assertValidEntry('fromFilesEntry', $filesEntry);
+
+        $error = $validEntry['error'];
 
         if ($error !== UPLOAD_ERR_OK) {
             $message = self::UPLOAD_ERROR_MESSAGES[$error]
                 ?? sprintf('Unknown upload error code: %d', $error);
 
             throw InvalidImageInputException::uploadError(
-                $filesEntry['name'],
+                $validEntry['name'],
                 $error,
                 $message,
             );
         }
 
         return new ImageFileInputDTO(
-            originalName:   $filesEntry['name'],
-            temporaryPath:  $filesEntry['tmp_name'],
-            clientMimeType: $filesEntry['type'] !== '' ? $filesEntry['type'] : null,
-            sizeBytes:      $filesEntry['size'],
+            originalName:   $validEntry['name'],
+            temporaryPath:  $validEntry['tmp_name'],
+            clientMimeType: $validEntry['type'] !== '' ? $validEntry['type'] : null,
+            sizeBytes:      $validEntry['size'],
         );
     }
 
@@ -95,7 +97,7 @@ final class NativePhpUploadAdapter
             throw InvalidImageInputException::uploadError($fieldName, UPLOAD_ERR_NO_FILE);
         }
 
-        return self::fromFilesEntry(self::assertValidEntry($fieldName, $_FILES[$fieldName]));
+        return self::fromFilesEntry($_FILES[$fieldName]);
     }
 
     /**

@@ -110,6 +110,78 @@ final class NativeImageProcessorTest extends TestCase
         self::assertSame(40, $result->height);
     }
 
+    public function test_resize_fill_centers_crop_from_landscape(): void
+    {
+        // Create a 200x100 landscape image
+        $source = sys_get_temp_dir() . '/landscape.jpg';
+        $img = imagecreatetruecolor(200, 100);
+        $red = imagecolorallocate($img, 255, 0, 0);
+        $green = imagecolorallocate($img, 0, 255, 0);
+        $blue = imagecolorallocate($img, 0, 0, 255);
+
+        // Fill red on left (50px), green in center (100px), blue on right (50px)
+        imagefilledrectangle($img, 0, 0, 49, 99, $red);
+        imagefilledrectangle($img, 50, 0, 149, 99, $green);
+        imagefilledrectangle($img, 150, 0, 199, 99, $blue);
+        imagejpeg($img, $source, 100);
+        imagedestroy($img);
+        (new \ReflectionProperty(TestImageFactory::class, 'tempFiles'))->setValue(null, array_merge((new \ReflectionProperty(TestImageFactory::class, 'tempFiles'))->getValue(), [$source])); // For cleanup
+
+        $target = $this->outputDir . '/fill_square.jpg';
+        // Resize to 50x50 square. Since source is 2:1, it must be scaled down by 2
+        // to match height, making intermediate 100x50, then centered crop to 50x50.
+        // It should capture the center green portion.
+        $opts = new ResizeOptionsDTO(50, 50, ResizeModeEnum::Fill, 100);
+        $result = $this->processor->resize($source, $target, $opts);
+
+        self::assertSame(50, $result->width);
+        self::assertSame(50, $result->height);
+
+        $outImg = imagecreatefromjpeg($target);
+
+        // Check center pixel
+        $rgb = imagecolorat($outImg, 25, 25);
+        $colors = imagecolorsforindex($outImg, $rgb);
+        self::assertGreaterThan(200, $colors['green']);
+        self::assertLessThan(50, $colors['red']);
+        self::assertLessThan(50, $colors['blue']);
+        imagedestroy($outImg);
+    }
+
+    public function test_resize_fill_centers_crop_from_portrait(): void
+    {
+        // Create a 100x200 portrait image
+        $source = sys_get_temp_dir() . '/portrait.jpg';
+        $img = imagecreatetruecolor(100, 200);
+        $red = imagecolorallocate($img, 255, 0, 0);
+        $green = imagecolorallocate($img, 0, 255, 0);
+        $blue = imagecolorallocate($img, 0, 0, 255);
+
+        // Fill red on top (50px), green in center (100px), blue on bottom (50px)
+        imagefilledrectangle($img, 0, 0, 99, 49, $red);
+        imagefilledrectangle($img, 0, 50, 99, 149, $green);
+        imagefilledrectangle($img, 0, 150, 99, 199, $blue);
+        imagejpeg($img, $source, 100);
+        imagedestroy($img);
+        (new \ReflectionProperty(TestImageFactory::class, 'tempFiles'))->setValue(null, array_merge((new \ReflectionProperty(TestImageFactory::class, 'tempFiles'))->getValue(), [$source])); // For cleanup
+
+        $target = $this->outputDir . '/fill_square_portrait.jpg';
+        $opts = new ResizeOptionsDTO(50, 50, ResizeModeEnum::Fill, 100);
+        $result = $this->processor->resize($source, $target, $opts);
+
+        self::assertSame(50, $result->width);
+        self::assertSame(50, $result->height);
+
+        $outImg = imagecreatefromjpeg($target);
+
+        $rgb = imagecolorat($outImg, 25, 25);
+        $colors = imagecolorsforindex($outImg, $rgb);
+        self::assertGreaterThan(200, $colors['green']);
+        self::assertLessThan(50, $colors['red']);
+        self::assertLessThan(50, $colors['blue']);
+        imagedestroy($outImg);
+    }
+
     // -------------------------------------------------------------------------
     // resize — Stretch mode: output is exactly the requested size
     // -------------------------------------------------------------------------
@@ -315,5 +387,20 @@ final class NativeImageProcessorTest extends TestCase
         self::assertArrayHasKey('mimeType', $decoded);
         self::assertArrayHasKey('format', $decoded);
         self::assertArrayHasKey('processingTimeMs', $decoded);
+    }
+
+    public function test_resize_png_with_low_quality_clamps_compression(): void
+    {
+        // Quality 1-4 would previously convert to compression 10: round((100 - 4)/10) = 10
+        // imagepng only accepts 0-9. On PHP 8.4+ this throws ValueError, so we must clamp it to 9.
+        $source = TestImageFactory::png();
+        $target = $this->outputDir . '/png_low_quality.png';
+
+        $opts = ResizeOptionsDTO::fit(50, 50, 4); // quality = 4
+
+        $result = $this->processor->resize($source, $target, $opts);
+
+        self::assertFileExists($target);
+        self::assertSame('image/png', $result->mimeType);
     }
 }

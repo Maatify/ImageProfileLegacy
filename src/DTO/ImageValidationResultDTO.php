@@ -27,7 +27,7 @@ use JsonSerializable;
  */
 final readonly class ImageValidationResultDTO implements JsonSerializable
 {
-    public function __construct(
+    private function __construct(
         public bool                              $isValid,
         public string                            $profileCode,
         public ?ImageMetadataDTO                 $metadata,
@@ -56,6 +56,10 @@ final readonly class ImageValidationResultDTO implements JsonSerializable
         ImageValidationErrorCollectionDTO $errors,
         ?ImageValidationWarningCollectionDTO $warnings = null,
     ): self {
+        if ($errors->isEmpty()) {
+            throw new class('An invalid validation result must contain at least one error.') extends \Maatify\ImageProfileLegacy\Exception\ImageProfileException {};
+        }
+
         return new self(
             isValid:     false,
             profileCode: $profileCode,

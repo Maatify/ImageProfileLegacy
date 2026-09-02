@@ -57,6 +57,7 @@ final class PdoImageProfileProvider implements ImageProfileProviderInterface
         private readonly PDO $pdo,
         private readonly string $table = 'image_profiles',
     ) {
+        \Maatify\ImageProfileLegacy\ValueObject\PdoTableIdentifier::assertValid($this->table);
     }
 
     /**

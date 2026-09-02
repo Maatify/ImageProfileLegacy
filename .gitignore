@@ -1,0 +1,15 @@
+/vendor/
+composer.lock
+
+.phpunit.result.cache
+.phpunit.cache/
+
+.phpstan/
+.phpstorm.meta.php
+_ide_helper.php
+
+.idea/
+.vscode/
+.DS_Store
+
+phpunit.xml

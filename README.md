@@ -1,12 +1,34 @@
-# maatify/image-profile-legacy
+<div align="center">
 
-A reusable, framework-agnostic image-profile definition and validation package.
+# Maatify Image Profile Legacy
+
+![Maatify.dev](https://www.maatify.dev/assets/img/img/maatify_logo_white.svg)
+
+[![Latest Version](https://img.shields.io/packagist/v/maatify/image-profile-legacy.svg)](https://packagist.org/packages/maatify/image-profile-legacy)
+[![PHP Version](https://img.shields.io/packagist/php-v/maatify/image-profile-legacy.svg)](https://packagist.org/packages/maatify/image-profile-legacy)
+[![License](https://img.shields.io/packagist/l/maatify/image-profile-legacy.svg)](LICENSE)
+[![PHPStan](https://img.shields.io/badge/PHPStan-Level%20Max-4E8CAE)](https://github.com/Maatify/ImageProfileLegacy)
+
+[![Monthly Downloads](https://img.shields.io/packagist/dm/maatify/image-profile-legacy)](https://packagist.org/packages/maatify/image-profile-legacy)
+[![Total Downloads](https://img.shields.io/packagist/dt/maatify/image-profile-legacy)](https://packagist.org/packages/maatify/image-profile-legacy)
+[![Maatify Ecosystem](https://img.shields.io/badge/Maatify-Ecosystem-blueviolet)](https://github.com/Maatify)
+[![Install](https://img.shields.io/badge/Install-composer%20require%20maatify%2Fimage--profile--legacy-blue)](https://packagist.org/packages/maatify/image-profile-legacy)
+
+[![Changelog](https://img.shields.io/badge/Changelog-View-blue.svg)](CHANGELOG.md)
+[![Release Checklist](https://img.shields.io/badge/Release-Checklist-blue.svg)](EXTRACTION_CHECKLIST.md)
+[![Contributing Guide](https://img.shields.io/badge/Contributing-Guide-blue.svg)](CONTRIBUTING.md)
+
+`maatify/image-profile-legacy` is a framework-agnostic standalone Composer package for defining and validating named image-upload profiles within the Maatify ecosystem.
+
+It provides reusable validation rules, a typed validation result, and pluggable profile storage — deliberately without pulling any HTTP framework, cloud SDK, or image-processing library into its core.
+
+</div>
 
 ---
 
 ## Table of Contents
 
-- [Purpose](#purpose)
+- [Key Features](#key-features)
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Core Concepts](#core-concepts)
@@ -22,54 +44,52 @@ A reusable, framework-agnostic image-profile definition and validation package.
 - [Extension Strategy](#extension-strategy)
 - [No-Array Contract](#no-array-contract)
 - [Design Rules](#design-rules)
+- [Testing and Static Analysis](#testing-and-static-analysis)
 - [Versioning](#versioning)
+- [Quality Status](#quality-status)
 - [License](#license)
+- [Author](#author)
 
 ---
 
-## Purpose
+## 🚀 Key Features
 
-`maatify/image-profile-legacy` is responsible for:
+* **Named, Reusable Validation Profiles**: Stable business `code` identifiers (e.g. `product_thumbnail`) carrying dimension, size, format, aspect-ratio, and transparency rules.
+* **Framework-Agnostic Core**: Zero required runtime dependencies — `NativeImageMetadataReader` reads metadata via `getimagesize()`, part of PHP's core `standard` extension.
+* **Typed, Never-Throw Validation Results**: `validateByCode()` always returns a typed `ImageValidationResultDTO`; business rule failures are collected, not thrown.
+* **Pluggable Profile Providers**: Ships with `ArrayImageProfileProvider` (config/testing) and `PdoImageProfileProvider` (database-backed) — implement `ImageProfileProviderInterface` for anything else.
+* **Optional Framework & Cloud Adapters**: `SlimUploadedFileAdapter` (PSR-7) and `NativePhpUploadAdapter` (`$_FILES`) for input, `DoSpacesImageStorage` for DigitalOcean Spaces / S3-compatible storage — all live outside the core.
+* **No-Array Contract**: Every public collection (errors, warnings, profiles, allowed extensions/MIME types) is a typed, iterable, JSON-serializable DTO — never a raw array.
+* **Extension-Ready Processing Primitives**: Optional resize/optimize/variant-generation APIs are decoupled from the stable v1 validation path.
+* **Stable Contract Surface**: 15 validation error codes defined in `ValidationErrorCodeEnum`, guaranteed not to change within a minor version.
 
-- defining reusable, named image validation profiles
-- validating uploaded images against profile rules
-- exposing a clean, typed validation result
-- keeping image rules configurable and extensible without coupling to any HTTP framework
+### Out of Scope
 
-The package is **not** responsible for:
+This package is deliberately **not** responsible for:
 
-- storage engines or CDN delivery
-- image resizing, optimization, or thumbnail generation
-- framework HTTP lifecycle or direct `$_FILES` handling
-- admin UI or CRUD controllers
-
-Optional processing primitives may exist in the package for future extension,
-but they are intentionally **not** part of the stable v1 validation path.
-
----
-
-## Requirements
-
-- PHP `^8.2`
-- No runtime dependencies beyond PHP itself for the core validation path
-  (`NativeImageMetadataReader` reads metadata via `getimagesize()`, part of
-  PHP's core `standard` extension — no `ext-gd` or `ext-fileinfo` needed)
-
-Optional, feature-gated dependencies (only needed if you use that specific
-class):
-
-- `ext-gd` — required to use `NativeImageProcessor` / `NativeImageVariantGenerator`
-  (resize, optimize, variant generation)
-- `ext-fileinfo` — required to use `DoSpacesImageStorage`, which detects MIME
-  type via `finfo` before upload
-- `ext-pdo` — required to use `PdoImageProfileProvider` / `PdoImageProfileRepository`;
-  use `ArrayImageProfileProvider` to avoid this dependency
-- `psr/http-message` — required to use `SlimUploadedFileAdapter`
-- `aws/aws-sdk-php` — required to use `DoSpacesImageStorage`
+* storage engines or CDN delivery
+* image resizing, optimization, or thumbnail generation
+* framework HTTP lifecycle or direct `$_FILES` handling
+* admin UI or CRUD controllers
 
 ---
 
-## Installation
+## 📋 Requirements
+
+* PHP `^8.2`
+* No runtime dependencies beyond PHP itself for the core validation path
+
+**Optional, Feature-Gated Dependencies** (only needed if you use that specific class):
+
+* `ext-gd` — `NativeImageProcessor` / `NativeImageVariantGenerator` (resize, optimize, variant generation)
+* `ext-fileinfo` — `DoSpacesImageStorage` (detects MIME type via `finfo` before upload)
+* `ext-pdo` — `PdoImageProfileProvider` / `PdoImageProfileRepository` (use `ArrayImageProfileProvider` to avoid this dependency)
+* `psr/http-message` — `SlimUploadedFileAdapter`
+* `aws/aws-sdk-php` — `DoSpacesImageStorage`
+
+---
+
+## 📦 Installation
 
 ```bash
 composer require maatify/image-profile-legacy
@@ -515,23 +535,20 @@ All collection DTOs implement `IteratorAggregate` and `JsonSerializable`.
 
 ---
 
-## Running Tests
+## Testing and Static Analysis
 
 ```bash
 composer install
-./vendor/bin/phpunit                        # all suites
-./vendor/bin/phpunit --testsuite Unit       # unit only
+./vendor/bin/phpunit                         # all suites
+./vendor/bin/phpunit --testsuite Unit        # unit only
 ./vendor/bin/phpunit --testsuite Integration # integration only (SQLite in-memory)
+./vendor/bin/phpunit --testsuite Contract    # contract only
+
+./vendor/bin/phpstan analyse                 # level 10 (max) + strict rules
 ```
 
 Integration tests require only `ext-pdo` and `ext-pdo_sqlite` — no external database needed.
 Validator and Reader unit tests require `ext-gd` for creating test images.
-
-## Static Analysis
-
-```bash
-./vendor/bin/phpstan analyse
-```
 
 ---
 
@@ -545,12 +562,33 @@ This package follows [Semantic Versioning](https://semver.org/).
 
 ---
 
-## License
+## ✅ Quality Status
 
-MIT — see [LICENSE](LICENSE).
+* PHP 8.2+
+* PHPStan Level 10 (max), strict rules, bleeding edge — 0 errors
+* PHPUnit — 308 tests, 563 assertions (Unit, Integration, Contract)
+* GitHub Actions CI validated (PHP 8.2 / 8.3, prefer-lowest and prefer-stable)
+* `composer audit` — no known vulnerability advisories
 
 ---
 
-## Author
+## 🪪 License
 
-[Maatify.dev](https://www.maatify.dev) — Mohamed Abdulalim
+This package is licensed under the MIT License.
+See the [LICENSE](LICENSE) file for details.
+
+---
+
+## 👤 Author
+
+Engineered by **Mohamed Abdulalim** ([@megyptm](https://github.com/megyptm))<br>
+Backend Lead & Technical Architect<br>
+[https://www.maatify.dev](https://www.maatify.dev)
+
+---
+
+<div align="center">
+
+[Built with ❤️ by Maatify.dev — Unified Ecosystem for Modern PHP Libraries](https://www.maatify.dev)
+
+</div>

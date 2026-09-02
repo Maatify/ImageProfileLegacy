@@ -120,6 +120,14 @@ final class ImageValidationResultDTOTest extends TestCase
         self::assertSame($meta, $result->metadata);
     }
 
+    public function test_invalid_factory_throws_on_empty_errors(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('An invalid validation result must contain at least one error.');
+
+        ImageValidationResultDTO::invalid('my_profile', null, ImageValidationErrorCollectionDTO::empty());
+    }
+
     // -------------------------------------------------------------------------
     // Invariant: valid => empty errors
     // -------------------------------------------------------------------------

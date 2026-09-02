@@ -228,7 +228,47 @@ final class DoSpacesImageStorageTest extends TestCase
             ->willReturn([]);
 
         $path = TestImageFactory::jpeg();
-        $result = $this->makeStorage()->store($path, '/images/test.jpg');
+        $result = $this->makeStorage()->store($path, '///images//test.jpg/');
         self::assertSame('images/test.jpg', $result->remotePath);
+    }
+
+    public function test_remote_path_is_url_encoded(): void
+    {
+        $this->s3->expects(self::once())
+            ->method('putObject')
+            ->with(self::callback(function (array $args) {
+                return $args['Key'] === 'images/my%20test.jpg';
+            }))
+            ->willReturn([]);
+
+        $path = TestImageFactory::jpeg();
+        $result = $this->makeStorage()->store($path, 'images/my test.jpg');
+        self::assertSame('images/my%20test.jpg', $result->remotePath);
+    }
+
+    public function test_store_throws_on_empty_remote_path(): void
+    {
+        $this->expectException(ImageProfileException::class);
+        $path = TestImageFactory::jpeg();
+        $this->makeStorage()->store($path, '///');
+    }
+
+    public function test_store_throws_on_remote_path_with_query_or_fragment(): void
+    {
+        $this->expectException(ImageProfileException::class);
+        $path = TestImageFactory::jpeg();
+        $this->makeStorage()->store($path, 'images/test.jpg?version=1');
+    }
+
+    public function test_delete_normalizes_remote_path(): void
+    {
+        $this->s3->expects(self::once())
+            ->method('deleteObject')
+            ->with(self::callback(function (array $args) {
+                return $args['Key'] === 'images/test.jpg';
+            }))
+            ->willReturn([]);
+
+        $this->makeStorage()->delete('///images//test.jpg/');
     }
 }

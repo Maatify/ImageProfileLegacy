@@ -67,12 +67,12 @@ It provides reusable validation rules, a typed validation result, and pluggable 
 
 ### Out of Scope
 
-This package is deliberately **not** responsible for:
+The canonical validation core of this package is deliberately **not** responsible for:
 
-* storage engines or CDN delivery
-* image resizing, optimization, or thumbnail generation
-* framework HTTP lifecycle or direct `$_FILES` handling
+* framework HTTP lifecycle
 * admin UI or CRUD controllers
+
+*(Note: While the core focuses solely on validation, the package does ship optional extension primitives for image resizing/optimization, adapters for `$_FILES`/PSR-7, and a DoSpaces storage implementation to aid integration.)*
 
 ---
 
@@ -568,8 +568,8 @@ This package follows [Semantic Versioning](https://semver.org/).
 
 * PHP 8.2+
 * PHPStan Level 10 (max), strict rules, bleeding edge — 0 errors
-* PHPUnit — 308 tests, 563 assertions (Unit, Integration, Contract)
-* GitHub Actions CI validated (PHP 8.2 / 8.3, prefer-lowest and prefer-stable)
+* PHPUnit — 333 tests, 611 assertions (Unit, Integration, Contract)
+* GitHub Actions CI validated (PHP 8.2 / 8.3 / 8.4 / 8.5, prefer-lowest and prefer-stable)
 * `composer audit` — no known vulnerability advisories
 
 ---

@@ -9,20 +9,6 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
-### Fixed
-- Fixed Blocker A: Variant persistence format is now round-trippable.
-- Fixed Blocker B: Variant output path safety and format extension consistency.
-- Fixed Blocker C: Fill center-crop algorithm correctness and deterministic test coverage.
-- Fixed Blocker D: Optimization option semantics (`stripMetadata` removed, `lossless()` constructor removed).
-- Fixed Blocker E: PHP compatibility (PNG quality level mapping).
-- Fixed Blocker F: `DoSpacesImageStorage` now fails safely using the package error contract when local file reading/statting fails.
-- Fixed Blocker G: Direct-entry shape validation implemented for `NativePhpUploadAdapter::fromFilesEntry`.
-- Fixed Blocker H: Validated PDO table identifiers to prevent arbitrary strings interpolation.
-- Fixed: Removed non-existent `develop` branch from GitHub Actions `ci.yml`.
-- Fixed: `ImageValidationResultDTO` constructor invariant is now properly enforced.
-- Fixed: Resolved documentation conflicts in `README.md` concerning the package scope.
-- Fixed: Expanded PHPUnit coverage configuration to include all required components outside `src/`.
-
 ---
 
 ## [1.0.0] — 2026-09-02
@@ -42,6 +28,20 @@ its own standalone repository, `Maatify/ImageProfileLegacy`.
   project's `Modules/` directory.
 - **Package identity renamed** from `maatify/image-profile` to
   `maatify/image-profile-legacy`, resolving a Composer package-name collision
+
+### Fixed (Release Blockers)
+- Fixed Blocker A: Variant persistence format is now round-trippable.
+- Fixed Blocker B: Variant output path safety and format extension consistency.
+- Fixed Blocker C: Fill center-crop algorithm correctness and deterministic test coverage.
+- Fixed Blocker D: Optimization option semantics (`stripMetadata` removed, `lossless()` constructor removed).
+- Fixed Blocker E: PHP compatibility (PNG quality level mapping).
+- Fixed Blocker F: `DoSpacesImageStorage` now fails safely using the package error contract when local file reading/statting fails.
+- Fixed Blocker G: Direct-entry shape validation implemented for `NativePhpUploadAdapter::fromFilesEntry`.
+- Fixed Blocker H: Validated PDO table identifiers to prevent arbitrary strings interpolation.
+- Fixed: Removed non-existent `develop` branch from GitHub Actions `ci.yml`.
+- Fixed: `ImageValidationResultDTO` constructor invariant is now properly enforced.
+- Fixed: Resolved documentation conflicts in `README.md` concerning the package scope.
+- Fixed: Expanded PHPUnit coverage configuration to include all required components outside `src/`.
   with the newer `Modules/ImageProfile`. **Not backward compatible** for
   anything requiring this package by its old name.
 - **Namespace normalized**: `Application\`, `Infrastructure\`, `Storage\`,

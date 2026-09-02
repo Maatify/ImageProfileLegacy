@@ -57,13 +57,6 @@ final class NativePhpUploadAdapter
     /**
      * Build a DTO from a single `$_FILES` entry.
      *
-     * @param array{name: string, type: string, tmp_name: string, error: int, size: int} $filesEntry
-     *
-     * @throws InvalidImageInputException on upload error or missing required fields.
-     */
-    /**
-     * Build a DTO from a single `$_FILES` entry.
-     *
      * @param mixed $filesEntry  Expected to be an array from $_FILES, but accepts mixed to validate safely.
      *
      * @throws InvalidImageInputException on upload error or missing required fields.

@@ -56,6 +56,10 @@ final readonly class ImageValidationResultDTO implements JsonSerializable
         ImageValidationErrorCollectionDTO $errors,
         ?ImageValidationWarningCollectionDTO $warnings = null,
     ): self {
+        if ($errors->isEmpty()) {
+            throw new \InvalidArgumentException('An invalid validation result must contain at least one error.');
+        }
+
         return new self(
             isValid:     false,
             profileCode: $profileCode,

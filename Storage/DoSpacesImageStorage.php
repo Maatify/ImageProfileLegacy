@@ -86,7 +86,7 @@ final class DoSpacesImageStorage implements ImageStorageInterface
             throw new class("Cannot store file; local path is not a readable file: {$localPath}") extends ImageProfileException {};
         }
 
-        $remotePath = trim($remotePath, '/');
+        $remotePath = self::normalizeRemotePath($remotePath);
 
         $mimeType  = $this->detectMime($localPath);
 
@@ -133,7 +133,7 @@ final class DoSpacesImageStorage implements ImageStorageInterface
      */
     public function delete(string $remotePath): void
     {
-        $remotePath = trim($remotePath, '/');
+        $remotePath = self::normalizeRemotePath($remotePath);
         try {
             $this->client->deleteObject([
                 'Bucket' => $this->bucket,
@@ -165,6 +165,33 @@ final class DoSpacesImageStorage implements ImageStorageInterface
             '/');
 
         return $base . '/' . ltrim($remotePath, '/');
+    }
+
+    /**
+     * Normalizes a remote path according to S3-compatible key rules.
+     * Prevents ambiguity from leading/trailing slashes, duplicate separators,
+     * empty paths, and query/fragment characters.
+     *
+     * @throws ImageProfileException if the normalized path is invalid.
+     */
+    private static function normalizeRemotePath(string $path): string
+    {
+        $normalized = trim($path, '/');
+        $normalized = preg_replace('#/+#', '/', $normalized) ?? $normalized;
+
+        if ($normalized === '') {
+            throw new class('Remote path cannot be empty') extends ImageProfileException {};
+        }
+
+        if (preg_match('/[\?#]/', $normalized) === 1) {
+            throw new class("Remote path contains invalid characters (?, #): {$path}") extends ImageProfileException {};
+        }
+
+        // Ensure path segments are URL encoded to handle spaces and other special characters
+        // consistently between object key and public URL
+        $segments = explode('/', $normalized);
+        $encodedSegments = array_map('rawurlencode', $segments);
+        return implode('/', $encodedSegments);
     }
 
     private function resolveEndpointHost(): string

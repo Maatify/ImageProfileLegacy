@@ -9,6 +9,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+---
+
+## [1.0.0] — 2026-09-02
+
+First stable release. This version's changes were accumulated while the
+package was being extracted from the `admin-control-panel` monorepo into
+its own standalone repository, `Maatify/ImageProfileLegacy`.
+
 ### Changed
 
 - **Extracted into its own standalone repository**, `Maatify/ImageProfileLegacy`.
@@ -77,6 +85,37 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   `imagecreatetruecolor()`, throwing the same exception the existing
   `$canvas === false` check already threw for this case — no call path's
   outcome changes.
+
+### Documentation
+
+- Reflected the package's new standalone-repository status throughout:
+  `composer.json`'s `homepage`/`support` URLs, `CONTRIBUTING.md`'s local
+  setup instructions, and the release checklist's framing no longer
+  describe it as pending extraction from a host monorepo.
+- `README.md` restyled to match the Maatify ecosystem's package
+  conventions (centered header, badge rows, Key Features, emoji-marked
+  sections, Quality Status). No content was dropped — the old "Purpose"
+  section was consolidated into the intro paragraph, Key Features, and
+  a new "Out of Scope" subsection. Two remaining "module" references
+  were corrected to "library".
+- `CONTRIBUTING.md`: corrected the Branch strategy table, which
+  documented a `develop` branch that has never existed in this
+  repository; added a "Pull Request Guidelines" section (focused PRs,
+  BC-impact disclosure, no casual public-API changes without prior
+  discussion) and a documentation-update checklist item.
+- `EXTRACTION_CHECKLIST.md` renamed to `RELEASE_READINESS_CHECKLIST.md`
+  (all references updated) and its stale/contradictory items
+  corrected: the "final readonly" claim was literally false for
+  `*CollectionDTO` classes (now split into two accurate items), a
+  duplicate/stale "12 values" round-trip item (superseded when Phase 9
+  added 3 error codes) was removed, and the backwards "`[Unreleased]`
+  kept empty between releases" wording was corrected.
+- `src/Infrastructure/Schema/image_profiles.sql`'s header comment and
+  table `COMMENT` still referenced the pre-rename package identity
+  (`maatify/image-profile`); corrected to `maatify/image-profile-legacy`.
+- Added `SECURITY.md` and `CODE_OF_CONDUCT.md`, matching the Maatify
+  ecosystem's standard structure; both linked from `CONTRIBUTING.md`
+  and badged in `README.md`.
 
 ---
 
@@ -164,13 +203,13 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - `tests/Contract/ImageProfileProviderInterfaceContractTest` — runs the full provider contract against both `ArrayImageProfileProvider` and `PdoImageProfileProvider` (SQLite in-memory): `findByCode` returns the correct typed entity, returns `null` for missing codes, does NOT filter by `is_active`; `listAll()` and `listActive()` return `ImageProfileCollectionDTO`; `listActive()` excludes inactive profiles.
 - `tests/Contract/ImageProfileValidatorInterfaceContractTest` — invariant assertions for `ImageProfileValidator`: always returns `ImageValidationResultDTO` (never throws); `errors` and `warnings` are always typed collection DTOs; `isValid=true` ⟹ empty errors; infra failures (missing profile, inactive profile, missing file) return invalid results, not exceptions; rule failures are collected exhaustively; metadata is present on rule failure; result is JSON-serializable.
 - `phpunit.xml.dist` updated: added `Contract` test suite pointing to `tests/Contract/`.
-- `EXTRACTION_CHECKLIST.md` — 14-section pre-release checklist covering: namespace purity, framework/cloud independence of `src/`, composer.json dependency declarations, no-array contract, immutability, contract stability, full test suite, static analysis, validator behaviour invariants, read/write separation, schema & infrastructure, exception hierarchy, adapters & storage, and CHANGELOG completeness.
+- `RELEASE_READINESS_CHECKLIST.md` — 14-section pre-release checklist covering: namespace purity, framework/cloud independence of `src/`, composer.json dependency declarations, no-array contract, immutability, contract stability, full test suite, static analysis, validator behaviour invariants, read/write separation, schema & infrastructure, exception hierarchy, adapters & storage, and CHANGELOG completeness.
 
 ### Architecture
 
 - Contract tests are intentionally separated from Unit and Integration suites. They assert API surface stability — not implementation details — so they remain valid across refactors.
 - `phpstan.neon` uses `bleedingEdge.neon` to catch issues that will become errors in future PHPStan releases before they land.
-- `EXTRACTION_CHECKLIST.md` serves as the authoritative gate before any Packagist release or repository extraction.
+- `RELEASE_READINESS_CHECKLIST.md` serves as the authoritative gate before any Packagist release or repository extraction.
 
 ---
 
@@ -304,7 +343,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - PSR-4 autoload under `Maatify\ImageProfile\` from `src/`.
 - `declare(strict_types=1)` on every file.
 
-[Unreleased]: https://github.com/Maatify/image-profile/compare/v0.9.0...HEAD
+[Unreleased]: https://github.com/Maatify/ImageProfileLegacy/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/Maatify/ImageProfileLegacy/releases/tag/v1.0.0
 [0.9.0]: https://github.com/Maatify/image-profile/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/Maatify/image-profile/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/Maatify/image-profile/compare/v0.6.0...v0.7.0

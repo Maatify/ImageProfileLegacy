@@ -159,7 +159,7 @@ Before marking a PR ready for review:
 - [ ] New behaviour is covered by at least one test
 - [ ] `README.md` (or other relevant docs) updated if behavior changed
 - [ ] `CHANGELOG.md` updated under `[Unreleased]`
-- [ ] `EXTRACTION_CHECKLIST.md` reviewed if structural changes were made
+- [ ] `RELEASE_READINESS_CHECKLIST.md` reviewed if structural changes were made
 
 ---
 

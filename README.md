@@ -15,7 +15,7 @@
 [![Install](https://img.shields.io/badge/Install-composer%20require%20maatify%2Fimage--profile--legacy-blue)](https://packagist.org/packages/maatify/image-profile-legacy)
 
 [![Changelog](https://img.shields.io/badge/Changelog-View-blue.svg)](CHANGELOG.md)
-[![Release Checklist](https://img.shields.io/badge/Release-Checklist-blue.svg)](EXTRACTION_CHECKLIST.md)
+[![Release Checklist](https://img.shields.io/badge/Release-Checklist-blue.svg)](RELEASE_READINESS_CHECKLIST.md)
 [![Security Policy](https://img.shields.io/badge/Security-Policy-blue.svg)](SECURITY.md)
 [![Contributing Guide](https://img.shields.io/badge/Contributing-Guide-blue.svg)](CONTRIBUTING.md)
 [![Code of Conduct](https://img.shields.io/badge/Code%20of%20Conduct-Read-blue.svg)](CODE_OF_CONDUCT.md)

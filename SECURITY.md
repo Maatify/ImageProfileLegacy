@@ -5,15 +5,12 @@
 
 ## Supported Versions
 
-**Maatify Image Profile Legacy** has not yet tagged a `1.0.0` release — only the
-`main` branch exists. Security fixes are applied there.
+The following versions of **Maatify Image Profile Legacy** are currently supported with security updates.
 
 | Version | Supported |
 |---------|-----------|
-| `main` (unreleased) | ✅ Yes |
-
-Once a `1.0.0` release is tagged, this table will be updated to track
-supported major versions per [Semantic Versioning](https://semver.org/).
+| 1.x     | ✅ Yes     |
+| < 1.0   | ❌ No      |
 
 ---
 

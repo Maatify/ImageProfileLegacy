@@ -4,6 +4,9 @@ Thank you for your interest in contributing. This document explains how to set
 up your environment, run tests and static analysis, and follow the project's
 coding standards before opening a pull request.
 
+By participating in this project, you agree to abide by the
+[Code of Conduct](CODE_OF_CONDUCT.md).
+
 ---
 
 ## Requirements

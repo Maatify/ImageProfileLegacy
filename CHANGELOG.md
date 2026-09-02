@@ -27,22 +27,7 @@ its own standalone repository, `Maatify/ImageProfileLegacy`.
   maatify/image-profile-legacy`) rather than referencing it inside another
   project's `Modules/` directory.
 - **Package identity renamed** from `maatify/image-profile` to
-  `maatify/image-profile-legacy`, resolving a Composer package-name collision.
-
-### Fixed
-
-- **Variant persistence format** is now robust and truly round-trippable.
-- **Variant output path generation** now enforces strict safety measures (rejecting path traversals, duplicates, etc) and preserves consistent format extension defaults.
-- **Fill center-crop algorithm** is now correctly aligned and deterministic.
-- **Optimization option semantics** are now truthful (`stripMetadata` and `lossless()` constructor were removed).
-- **PHP compatibility** updated properly: fixed an issue clamping PNG quality to valid levels and added PHP 8.4 and 8.5 to CI matrix.
-- **DoSpacesImageStorage** fails reliably and enforces exact remote path semantics when `stat`/reading of the local file fails or invalid characters are present.
-- **NativePhpUploadAdapter** strictly enforces shape validations upon direct `$files` array inputs.
-- **PDO table identifiers** prevent arbitrary strings via a reusable validator constraint in Provider and Repository.
-- Removed nonexistent `develop` branches in CI config.
-- `ImageValidationResultDTO` constructor invariant securely throws if an invalid validation lacks errors.
-- Resolved documentation ambiguities around framework integration elements versus the validation core in README.md.
-- Broadened test suites and metrics directly mapping to shipped package contents.
+  `maatify/image-profile-legacy`, resolving a Composer package-name collision
   with the newer `Modules/ImageProfile`. **Not backward compatible** for
   anything requiring this package by its old name.
 - **Namespace normalized**: `Application\`, `Infrastructure\`, `Storage\`,
@@ -137,7 +122,7 @@ its own standalone repository, `Maatify/ImageProfileLegacy`.
 > **Pre-release development history.** The `0.1.0`–`0.9.0` entries below
 > document this package's development before it existed as its own
 > repository — they were never tagged as GitHub releases and have no
-> corresponding diff links. `1.0.0` above is the first version tagged
+> corresponding diff links. `1.0.0` above is intended to be the first tagged release
 > in `Maatify/ImageProfileLegacy`.
 
 ## 0.9.0 — 2026-04-17

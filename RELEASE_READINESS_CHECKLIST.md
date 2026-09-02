@@ -204,7 +204,10 @@ be verified **green** before tagging.
       it is emptied only at the moment its contents move into a new
       version entry
 - [x] Version links at the bottom of `CHANGELOG.md` point to the correct GitHub
-      diff URLs
+      diff URLs for every version actually tagged in this repository
+      (`[Unreleased]`, `[1.0.0]`). The `0.1.0`–`0.9.0` entries predate this
+      repository's existence, were never tagged here, and correctly carry no
+      link — they are marked as pre-release development history instead
 
 ---
 

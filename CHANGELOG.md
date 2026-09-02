@@ -119,7 +119,13 @@ its own standalone repository, `Maatify/ImageProfileLegacy`.
 
 ---
 
-## [0.9.0] — 2026-04-17
+> **Pre-release development history.** The `0.1.0`–`0.9.0` entries below
+> document this package's development before it existed as its own
+> repository — they were never tagged as GitHub releases and have no
+> corresponding diff links. `1.0.0` above is the first version tagged
+> in `Maatify/ImageProfileLegacy`.
+
+## 0.9.0 — 2026-04-17
 
 ### Added
 
@@ -149,7 +155,7 @@ its own standalone repository, `Maatify/ImageProfileLegacy`.
 
 ---
 
-## [0.8.0] — 2026-04-17
+## 0.8.0 — 2026-04-17
 
 ### Added
 
@@ -178,7 +184,7 @@ its own standalone repository, `Maatify/ImageProfileLegacy`.
 
 ---
 
-## [0.7.0] — 2026-04-17
+## 0.7.0 — 2026-04-17
 
 ### Added
 
@@ -194,7 +200,7 @@ its own standalone repository, `Maatify/ImageProfileLegacy`.
 
 ---
 
-## [0.6.0] — 2026-04-17
+## 0.6.0 — 2026-04-17
 
 ### Added
 
@@ -213,7 +219,7 @@ its own standalone repository, `Maatify/ImageProfileLegacy`.
 
 ---
 
-## [0.5.0] — 2026-04-17
+## 0.5.0 — 2026-04-17
 
 ### Added
 
@@ -238,7 +244,7 @@ its own standalone repository, `Maatify/ImageProfileLegacy`.
 
 ---
 
-## [0.4.0] — 2026-04-17
+## 0.4.0 — 2026-04-17
 
 ### Added
 
@@ -265,7 +271,7 @@ its own standalone repository, `Maatify/ImageProfileLegacy`.
 
 ---
 
-## [0.3.0] — 2026-04-17
+## 0.3.0 — 2026-04-17
 
 ### Added
 
@@ -291,7 +297,7 @@ its own standalone repository, `Maatify/ImageProfileLegacy`.
 
 ---
 
-## [0.2.0] — 2026-04-16
+## 0.2.0 — 2026-04-16
 
 ### Added
 
@@ -311,7 +317,7 @@ its own standalone repository, `Maatify/ImageProfileLegacy`.
 
 ---
 
-## [0.1.0] — 2026-04-16
+## 0.1.0 — 2026-04-16
 
 ### Added
 
@@ -345,12 +351,3 @@ its own standalone repository, `Maatify/ImageProfileLegacy`.
 
 [Unreleased]: https://github.com/Maatify/ImageProfileLegacy/compare/v1.0.0...HEAD
 [1.0.0]: https://github.com/Maatify/ImageProfileLegacy/releases/tag/v1.0.0
-[0.9.0]: https://github.com/Maatify/image-profile/compare/v0.8.0...v0.9.0
-[0.8.0]: https://github.com/Maatify/image-profile/compare/v0.7.0...v0.8.0
-[0.7.0]: https://github.com/Maatify/image-profile/compare/v0.6.0...v0.7.0
-[0.6.0]: https://github.com/Maatify/image-profile/compare/v0.5.0...v0.6.0
-[0.5.0]: https://github.com/Maatify/image-profile/compare/v0.4.0...v0.5.0
-[0.4.0]: https://github.com/Maatify/image-profile/compare/v0.3.0...v0.4.0
-[0.3.0]: https://github.com/Maatify/image-profile/compare/v0.2.0...v0.3.0
-[0.2.0]: https://github.com/Maatify/image-profile/compare/v0.1.0...v0.2.0
-[0.1.0]: https://github.com/Maatify/image-profile/releases/tag/v0.1.0
